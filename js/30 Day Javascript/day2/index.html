@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 2: Clock</title>
+    <style>
+
+        @font-face {
+            font-family: 'DS-Digital';
+            src: url('fonts/DS-DIGI.TTF') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        html {
+          background: #018DED url(https://unsplash.it/1500/1000?image=881&blur=5);
+          background-size: cover;
+          font-family: 'helvetica neue';
+          text-align: center;
+          font-size: 10px;
+        }
+    
+        .container {
+          margin: 0;
+          font-size: 2rem;
+          display: flex;
+          flex: 1;
+          /* min-height: 100vh; */
+          align-items: center;
+        }
+    
+        .clock {
+            /* display: none; */
+          width: 30rem;
+          height: 30rem;
+          border: 20px solid white;
+          border-radius: 50%;
+          margin: 50px auto;
+          position: relative;
+          padding: 2rem;
+          box-shadow:
+            0 0 0 4px rgba(0,0,0,0.1),
+            inset 0 0 0 3px #EFEFEF,
+            inset 0 0 10px black,
+            0 0 10px rgba(0,0,0,0.2);
+        }
+    
+        .clock-face {
+          position: relative;
+          width: 100%;
+          height: 100%;
+          transform: translateY(-3px); /* account for the height of the clock hands */
+        }
+    
+        .hand {
+          width: 50%;
+          height: 6px;
+          background: black;
+          position: absolute;
+          top: 50%;
+          transform-origin: 100%;
+          /* transition: all 0.5s; */
+          transition-timing-function: cubic-bezier(0.1, 2.7, 0.58, 1);
+        }
+        .min-hand {
+            background: #018DED;
+        }
+        .second-hand{
+            background: #EFEFEF;
+        }
+        .clock-dig{
+            font-family: 'DS-Digital', sans-serif;
+            display: block;
+            width: 80%;
+            margin: 50px auto;
+            color: #00ff00; /* Green LED effect */
+            text-shadow: 0 0 5px #00ff00;
+        }
+        .digital-clock{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 200px;
+        }
+        .digital{
+            width: 50%;
+        }
+        .digital::after{
+            margin: 0 5px 0 5px;
+            content: " : ";
+        }
+        .digital:last-child::after{
+            content: "";
+        }
+      </style>    
+</head>
+<body>
+    <!-- analog clock -->
+    <div class="container">
+        <div class="clock">
+            <div class="clock-face">
+                <div class="hand hour-hand"></div>
+                <div class="hand min-hand"></div>
+                <div class="hand second-hand"></div>
+            </div>
+        </div>    
+    </div>
+    <!-- digital clock -->
+    <div class="clock-dig">
+        <div class="digital-clock">
+            <div class="digital hours"></div>
+            <div class="digital minutes"></div>
+            <div class="digital seconds"></div>
+        </div>    
+    </div>
+
+    <script>
+        // for analog clock
+        const secondHand = document.querySelector('.second-hand');
+        const minuteHand = document.querySelector('.min-hand');
+        const hourHand = document.querySelector('.hour-hand');
+        // for digital clock
+        const DigitalSecond = document.querySelector('.seconds');
+        const DigitalMinute = document.querySelector('.minutes');
+        const DigitalHour = document.querySelector('.hours');
+
+        // function for analog clock
+        function setDate() {
+            const now = new Date();
+            // for rotating second-hand, get the degrees
+            const seconds = now.getSeconds();
+            const secondsDegrees = ((seconds / 60)*360) + 90;
+            secondHand.style.transform = `rotate(${secondsDegrees}deg)`;
+            // for rotating minute-hand, get the degrees
+            const minutes = now.getMinutes();
+            const minutesDegrees = ((minutes / 60)*360) + 90;
+            minuteHand.style.transform = `rotate(${minutesDegrees}deg)`;
+            // for rotating hour-hand, get the degrees            
+            const hour = now.getHours();
+            const hoursDegrees = ((hour/12)*360) + 90;
+            hourHand.style.transform = `rotate(${hoursDegrees}deg)`;
+        }
+
+        //function for digital clock
+        function setDigitalTime(){
+            const now = new Date();
+            const seconds = now.getSeconds();
+            DigitalSecond.textContent = addZero(seconds);
+            const minutes = now.getMinutes();
+            DigitalMinute.textContent = addZero(minutes);
+            const hour = now.getHours();
+            DigitalHour.textContent = addZero(hour);
+        }
+
+        // add zero for each number that under 10
+        function addZero(number){
+            if(number.toString().length == 1){
+                return "0" + number;
+            }else{
+                return number
+            }
+        }
+        // call the analog & digital clock function every 1 seconds
+        setInterval(setDate, 1000);
+        setInterval(setDigitalTime, 1000);
+    </script>
+</body>
+</html>
